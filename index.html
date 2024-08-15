@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Average Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Average Calculator</h1>
+        <div class="form-group">
+            <label for="numberId">Choose Number Type:</label>
+            <select id="numberId">
+                <option value="p">Prime</option>
+                <option value="f">Fibonacci</option>
+                <option value="e">Even</option>
+                <option value="r">Random</option>
+            </select>
+            <button onclick="fetchAverage()">Calculate Average</button>
+        </div>
+        <div id="result">
+            <!-- The result will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        function fetchAverage() {
+            const numberId = document.getElementById('numberId').value;
+            fetch(`/api/numbers/${numberId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = `
+                        <h3>Result</h3>
+                        <p><strong>Previous State:</strong> ${JSON.stringify(data.windowPrevState)}</p>
+                        <p><strong>Current State:</strong> ${JSON.stringify(data.windowCurrState)}</p>
+                        <p><strong>Numbers Fetched:</strong> ${JSON.stringify(data.numbers)}</p>
+                        <p><strong>Average:</strong> ${data.avg}</p>
+                    `;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
